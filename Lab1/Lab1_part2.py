@@ -37,3 +37,16 @@ print(f'''Current (Amps) and Power (Watts) for each resistor
 ({I_R5:.3f}, {P_R5:.3f})
 ({I_R6:.3f}, {P_R6:.3f})''')
 
+# Create a bar chart with text labels
+plt.bar([1,2,3,4,5,6],[P_R1, P_R2, P_R3, P_R4, P_R5, P_R6])
+plt.xticks([1,2,3,4,5,6],labels=["R1","R2","R3","R4","R5","R6"])
+plt.xlabel("Resistor Number")
+plt.ylabel("Power (Watts)")
+plt.text(1,P_R1,f"{P_R1:.3f}",horizontalalignment='center',verticalalignment='bottom')
+plt.text(2,P_R2,f"{P_R2:.3f}",horizontalalignment='center',verticalalignment='bottom')
+plt.text(3,P_R3,f"{P_R3:.3f}",horizontalalignment='center',verticalalignment='bottom')
+plt.text(4,P_R4,f"{P_R4:.3f}",horizontalalignment='center',verticalalignment='bottom')
+plt.text(5,P_R5,f"{P_R5:.3f}",horizontalalignment='center',verticalalignment='bottom')
+plt.text(6,P_R6,f"{P_R6:.3f}",horizontalalignment='center',verticalalignment='bottom')
+plt.title("Resistor Power Dissipation")
+plt.show()

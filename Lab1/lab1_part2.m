@@ -40,5 +40,17 @@ fprintf("Current (Amps) and Power (Watts) for each resistor\n" + ...
     "(%.3f,%.3f)\n", ...
     I_R1, P_R1, I_R2, P_R2, I_R3, P_R3, I_R4, P_R4, I_R5, P_R5, I_R6, P_R6);
 
-
+% Create a bar chart with text labels
+title("Resistor Power Dissipation")
+bar([1,2,3,4,5,6],[P_R1, P_R2, P_R3, P_R4, P_R5, P_R6]);
+xticks([1,2,3,4,5,6]);
+xticklabels(["R1","R2","R3","R4","R5","R6"]);
+xlabel("Resistor Number")
+ylabel("Power (Watts)")
+text(1,P_R1,sprintf("%.3f",P_R1),"HorizontalAlignment","center","VerticalAlignment","bottom"); 
+text(2,P_R2,sprintf("%.3f",P_R2),"HorizontalAlignment","center","VerticalAlignment","bottom");  
+text(3,P_R3,sprintf("%.3f",P_R3),"HorizontalAlignment","center","VerticalAlignment","bottom");  
+text(4,P_R4,sprintf("%.3f",P_R4),"HorizontalAlignment","center","VerticalAlignment","bottom");  
+text(5,P_R5,sprintf("%.3f",P_R5),"HorizontalAlignment","center","VerticalAlignment","bottom");  
+text(6,P_R6,sprintf("%.3f",P_R6),"HorizontalAlignment","center","VerticalAlignment","bottom");  
 
