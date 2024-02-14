@@ -13,7 +13,7 @@ void setup() {
   digitalWrite(4, HIGH);  //IMPORTANT, Set HOLD pin to high to maintain power supply or M5StickCP2 will turn off
   auto cfg = M5.config();
   StickCP2.begin(cfg);
-  //connectWifi(); # runs a captive portal (very opinionated)
+  //connectWifi(); // runs a captive portal (very opinionated)
   connectToEnterpriseWifi(); // note, must modify SimpleWifi.ino
   //connectToPersonalWifi(); //this launches an opinionated wifi setup (see WiFiParts.ino)
   StickCP2.Display.clear(); //clear stuff from wifi connect
