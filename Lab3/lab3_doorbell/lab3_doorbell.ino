@@ -47,19 +47,22 @@ void send_ring(){
 void loop() {
   mqttClient.poll(); // Checks for MQTT messages
   StickCP2.update(); // Updates button states
+
+  if(StickCP2.BtnB.wasPressed()){
+    digitalWrite(4,LOW); //turn off
+  }
   unsigned long currentTime = millis();
   if(mode==NORMAL){
     if(StickCP2.BtnA.wasPressed()){
       send_ring();
     }
-    
   }
   else if(mode==DND){
     if(StickCP2.BtnA.wasPressed()){
       pressTime = millis();
       waitingForRelease = true;
     }
-    if(currentTime-pressTime > 3000){
+    if(StickCP2.BtnA.isHolding() && currentTime-pressTime > 3000){
       if(waitingForRelease){
         send_ring();
       }
