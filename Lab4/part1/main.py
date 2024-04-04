@@ -30,7 +30,7 @@ while running:
             if evt.type == pygame.MOUSEBUTTONUP:
                 planets.append(Planet(pygame.Vector2(pygame.mouse.get_pos()), mass_charge,colors[len(planets)]))    
         
-    dt = .0001 # fixed dt to make the simulation stable
+    dt = .001 # fixed dt to make the simulation stable
     if pygame.mouse.get_pressed()[0]:
         mass_charge += 100000000*dt
 
