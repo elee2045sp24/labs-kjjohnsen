@@ -2,9 +2,7 @@
 #include <driver/i2s.h>
 #include <WiFi.h>
 
-const char* ssid = "shamrock";
-const char* password = "3522195419";
-const char* host = "192.168.68.131"; // Replace with the IP address of the server you want to connect to
+const char* host = "172.20.71.211"; // Replace with the IP address of the server you want to connect to
 int port = 8080; // Replace with the port number you want to connect to
 WiFiUDP client;
 #define PIN_CLK     0

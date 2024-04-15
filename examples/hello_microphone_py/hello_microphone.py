@@ -18,14 +18,14 @@ fig, ax = plt.subplots()
 line, = ax.plot([], [], lw=2) # pre-create the line
 ax.set_xlim(0, 10000)  # Frequency range up to half the sampling rate (Nyquist frequency)
 ax.set_ylim(0, 10000000)     # Adjust the y-axis as needed
-
+line.set_xdata(frequencies)
 # Real-time visualization loop
 def callback(indata):
     # Compute FFT
     y = np.abs(np.fft.fft(indata, n=block_size))[:block_size//2] # compute the actual fft
     
     # Update plot efficiently
-    line.set_xdata(frequencies)
+    
     line.set_ydata(y)
     fig.canvas.draw()
     fig.canvas.flush_events()
@@ -49,8 +49,8 @@ buffer = [] # used to buffer audio until we have a suitable amount of samples fo
 while True:
     data, addr = sock.recvfrom(512)  # receive up to 512 bytes of data
     int_data = struct.iter_unpack('<h',data) # data is little endian signed 16 bit
-    float_data = [x[0] for x in int_data] # convert to between 0 and 1 for fft
-    buffer.extend(float_data)
+    samples = [x[0] for x in int_data] 
+    buffer.extend(samples)
     if len(buffer) > block_size:
         callback(buffer[:block_size])
         buffer = buffer[block_size:]

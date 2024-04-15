@@ -1,13 +1,13 @@
 
 import os
-os.add_dll_directory("C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v12.3\\bin")
+#os.add_dll_directory("C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v12.3\\bin")
 
 import cv2 # cv2 is a newer interface to opencv
 import numpy as np
 # start by reading our pre-trained model
 net = cv2.dnn.readNet('models/yolov5s.onnx')
-net.setPreferableBackend(cv2.dnn.DNN_BACKEND_CUDA) # if you have cuda AND build opencv with cuda support
-net.setPreferableTarget(cv2.dnn.DNN_TARGET_CUDA_FP16)
+#net.setPreferableBackend(cv2.dnn.DNN_BACKEND_CUDA) # if you have cuda AND build opencv with cuda support
+#net.setPreferableTarget(cv2.dnn.DNN_TARGET_CUDA_FP16)
 # and the strings that correspond to each class ID (0-79)
 with open("models/classes.txt") as f:
     classes = [s.strip() for s in f.readlines()]
@@ -26,7 +26,7 @@ def format_yolov5(frame):
     return result
 
 def main():
-    cap = cv2.VideoCapture(1) # 0 is an index to the first camera
+    cap = cv2.VideoCapture(0) # 0 is an index to the first camera
     while cap.isOpened():
         res, frame = cap.read() # ret will indicate success or failure, frame is a numpy array
         if not res:
