@@ -1,10 +1,20 @@
 #include <M5StickCPlus2.h>
 #include <driver/i2s.h>
 #include <WiFi.h>
+#include <ArduinoMqttClient.h>
 
 const char* host = "172.20.71.211"; // Replace with the IP address of the server you want to connect to
 int port = 8080; // Replace with the port number you want to connect to
-WiFiUDP client;
+
+//MQTT variables
+const char broker[] = "mqtt.ugavel.com";
+int mqtt_port = 1883;
+const char mic_button_topic[] = "ugaelee2045sp24/kjohnsen/mic";
+const char llama_response_topic[] = "ugaelee2045sp24/kjohnsen/llamaresponse";
+WiFiClient tcpClient;
+MqttClient mqttClient(tcpClient);
+
+WiFiUDP udpClient;
 #define PIN_CLK     0
 #define PIN_DATA    34
 #define BUFFER_SIZE  512
@@ -35,6 +45,21 @@ void i2sInit() {
     i2s_set_pin(I2S_NUM_0, &pin_config);
     i2s_set_clk(I2S_NUM_0, SAMPLE_RATE, I2S_BITS_PER_SAMPLE_16BIT, I2S_CHANNEL_MONO);
 }
+
+void onMqttMessage(int messageSize) {
+  Serial.print("Received a message from topic '");
+  Serial.print(mqttClient.messageTopic());
+  Serial.print("', length ");
+  Serial.print(messageSize);
+  Serial.println(" bytes:");
+  if (mqttClient.messageTopic() == llama_response_topic) {
+      
+      M5.Lcd.fillScreen(WHITE);
+      M5.Lcd.setTextColor(BLACK, WHITE);
+      M5.Lcd.setCursor(0,0);
+      M5.Lcd.println(mqttClient.readString());
+  }
+}
 void setup() {
     M5.begin();
     connectToAnyWifi(); //new function to try to try connect to both types of wifi
@@ -44,15 +69,37 @@ void setup() {
     M5.Lcd.setTextColor(BLACK, WHITE);
     M5.Lcd.println("mic test");
 
+    //MQTT setup
+    mqttClient.onMessage(onMqttMessage);
+    mqttClient.setUsernamePassword("class_user", "class_password");
+    mqttClient.connect(broker, mqtt_port);
+    mqttClient.subscribe(llama_response_topic);
     i2sInit();
 }
-int framesread = 0;
-void loop() {
-  size_t bytesread;
 
+void loop() {
+  mqttClient.poll(); // Checks for MQTT messages
+  StickCP2.update();
+  size_t bytesread;
   i2s_read(I2S_NUM_0, (char *)BUFFER, BUFFER_SIZE, &bytesread, 1000); 
-  client.beginPacket(host,port);
-  client.write(BUFFER,bytesread);
-  client.endPacket();
+  udpClient.beginPacket(host,port);
+  udpClient.write(BUFFER,bytesread);
+  udpClient.endPacket();
+
+  if(StickCP2.BtnA.wasPressed()){
+    // Publish the raw bytes over MQTT
+    mqttClient.beginMessage(mic_button_topic);
+    uint8_t message[1] = {1};
+    mqttClient.write(message,1);
+    mqttClient.endMessage();
+  }
+
+  if(StickCP2.BtnA.wasReleased()){
+    // Publish the raw bytes over MQTT
+    mqttClient.beginMessage(mic_button_topic);
+    uint8_t message[1] = {0};
+    mqttClient.write(message,1);
+    mqttClient.endMessage();
+  }
 
 }
